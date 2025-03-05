@@ -3,7 +3,7 @@ import { FaSearch, FaShoppingBag, FaSignInAlt, FaSignOutAlt} from 'react-icons/f
 import { FaUser } from 'react-icons/fa6';
 import { Link } from 'react-router-dom'
 
-const user={_id:"123",role:"admin"};
+const user={_id:"",role:"admin"};
 function Header() {
     const [isOpen,setIsOpen]=useState<boolean>(false)
 
@@ -28,12 +28,12 @@ function Header() {
                         )
                     }
                     <Link onClick={()=>{setIsOpen(false)}} to="/orders">Orders</Link>
-                    <button onClick={logoutHandler}><FaSignOutAlt/></button>
+                    <button onClick={logoutHandler}><FaSignOutAlt title='Logout'/>{" "}</button>
                 </div>
             </dialog>
             </>
         ):(<Link to={"/login"}>
-            <FaSignInAlt/>
+            <FaSignInAlt title='Login'/>{" "}
         </Link>)
     }
     </nav>
