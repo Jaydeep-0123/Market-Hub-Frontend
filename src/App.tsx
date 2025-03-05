@@ -1,6 +1,7 @@
 import React from 'react';
 import {BrowserRouter as Router,Routes,Route} from "react-router-dom";
 import {lazy,Suspense} from 'react'
+import {ToastContainer} from 'react-toastify'
 import Loader from './components/Loader.tsx';
 import Header from './components/Header.tsx';
 import OrderDetails from './screens/OrderDetails.tsx';
@@ -74,6 +75,7 @@ function App() {
           </Route>;
                 </Routes>
                 </Suspense>
+                <ToastContainer />
               </Router>
     </div>
   )
