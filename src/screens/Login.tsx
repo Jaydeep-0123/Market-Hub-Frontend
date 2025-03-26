@@ -20,15 +20,14 @@ function Login()
             const provider= new GoogleAuthProvider();
             const {user} = await signInWithPopup(auth,provider);
             const response=await login({
-            name:"Jaydeep Panwar",
-            email:"jaydeep@gmail.com",
-            photo:"asasasa",
+            name:user.displayName!,
+            email:user.email!,
+            photo:user.photoURL!,
             role:"user",
             gender:gender,
             dob:date,
-            _id:"asasasas",
+            _id:user.uid
         });
-        console.log(response+"jaydeep");
        
         if("data" in response)
         {
@@ -39,9 +38,7 @@ function Login()
           const error=response.error as FetchBaseQueryError; 
           const message=(error.data as MessageResponse).message; 
           toast.error(message)
-        }
-        console.log(user);
-        
+        }        
       
       }
       catch(error)

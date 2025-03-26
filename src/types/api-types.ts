@@ -1,3 +1,5 @@
+import { User } from "./types";
+
 export type  MessageResponse=
 {
     status:string;
@@ -5,4 +7,11 @@ export type  MessageResponse=
     message:string;
     data:object;
     error:string;
+}
+
+export type UserResponse={
+    status:string,
+    statusCode:number
+    data:User,
+    error:string
 }
