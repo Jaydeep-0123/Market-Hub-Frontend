@@ -94,8 +94,8 @@
       padding: 10px;
       width: 120px;
       position: absolute;
-      left: calc(92% - 100px);
-      top: 8%;
+      left: calc(98% - 100px);
+      top: 90%;
       >div{
         @include flex(column,flex-start,center,0.25rem);
       }
