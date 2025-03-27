@@ -1,12 +1,21 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import ProductCard from '../components/ProductCard'
+import { useLatestProductsQuery } from '../redux/api/productAPI'
+import { toast } from 'react-toastify';
+import Loader from '../components/Loader';
 
 function Home() {
+
+  const {data,isLoading,isError} =useLatestProductsQuery("");
 
   const addToCartHandler=()=>{
 
   }
+
+  if(isError)
+    toast.error("Cannot Fetch the Product")
+
   return (
     <div className='home'>
      <section></section>
@@ -14,13 +23,19 @@ function Home() {
       <Link to={"/search"} className='findMore'>More</Link>
      </h1>
      <main>
-      <ProductCard 
-       productId='asdasd'
-       name='Camera' 
-       price={4545} 
-       stock={453}  
-       photo='https://m.media-amazon.com/images/I/71jG+e7roXL._SL1500_.jpg'
-       handler={addToCartHandler}/>
+    {
+     isLoading?(
+     <Loader/>
+     ) :(data?.data.map((i)=>(
+        <ProductCard 
+        productId={i._id}
+        name={i.name} 
+        price={i.price} 
+        stock={i.stock}  
+        photo={i.photo}
+        handler={addToCartHandler}/>
+      )))
+    }
      </main>
     </div>
   )
