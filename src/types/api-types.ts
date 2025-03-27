@@ -1,4 +1,13 @@
-import { User } from "./types";
+import { Product, User } from "./types";
+
+export type CustomError={
+    status:number;
+    data:{
+        message:string;
+        success:boolean;
+    }
+}
+
 
 export type  MessageResponse=
 {
@@ -10,8 +19,15 @@ export type  MessageResponse=
 }
 
 export type UserResponse={
-    status:string,
-    statusCode:number
-    data:User,
-    error:string
+    status:string;
+    statusCode:number;
+    data:User;
+    error:string;
+}
+
+export type ProductResponse={
+    status:string;
+    statusCode:number;
+    data:Product[];
+    error:string;
 }
