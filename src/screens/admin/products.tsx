@@ -65,7 +65,7 @@ const Products = () => {
           name: i.name,
           price: i.price,
           stock: i.stock,
-          action:<Link to={`/admin/productd/${i._id}`}>Manage</Link>
+          action:<Link to={`/admin/product/${i._id}`}>Manage</Link>
         }))
       );
     }

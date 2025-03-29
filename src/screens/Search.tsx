@@ -1,20 +1,43 @@
 import React, { useState } from "react";
 import ProductCard from "../components/ProductCard";
+import { useCategoriesQuery, useSearchProductsQuery } from "../redux/api/productAPI";
+import { CustomError } from "../types/api-types";
+import { toast } from "react-toastify";
+import Loader from "../components/Loader";
 
 function Search() {
+  const {data:categoriesResponse,
+        isLoading:loadingCategories,
+        isError,
+        error
+      }=useCategoriesQuery("");
+
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState("");
   const [maxPrice, setPrice] = useState(100000);
   const [category, setCategory] = useState("");
   const [page, setPage] = useState(1);
 
+  const {isLoading:productLoading,data:searchData,isError:productIsError,error:prductError}=useSearchProductsQuery({search,sort,category,page,price:maxPrice})
+  console.log(searchData);
+  
   function addToCartHandler()
   {
 
   }
-
   const isNextPage=page<4;
   const isPrevPage=page>1;
+
+ if(isError)
+ {
+  const err=error as  CustomError;
+  toast.error(err.data.message);
+ }
+if(productIsError)
+{
+  const err=prductError as CustomError;
+  toast.error(err.data.message);
+}
   return (
     <div className="product-search-page">
       <aside>
@@ -55,8 +78,11 @@ function Search() {
             }}
           >
             <option value="">All</option>
-            <option value="">Sample1</option>
-            <option value="">Sample2</option>
+            {!loadingCategories&&categoriesResponse?.
+            category.map((i,index)=>(
+              <option key={index} value={i}>{i}</option>
+            ))
+            }
           </select>
         </div>
       </aside>
@@ -68,20 +94,29 @@ function Search() {
           placeholder="Search by name..."
           onChange={(e)=>{setSearch(e.target.value)}}/>
         <div className="search-product-list">
-          <ProductCard  productId='asdasd'
-       name='Camera' 
-       price={4545} 
-       stock={453}  
-       photo='https://m.media-amazon.com/images/I/71jG+e7roXL._SL1500_.jpg'
-       handler={addToCartHandler}/>
+          {
+            productLoading?<Loader/>:
+            searchData?.data.map((i)=>(
+              <ProductCard  
+              productId={i._id}
+              name={i.name}
+              price={i.price} 
+              stock={i.stock}  
+              photo={i.photo}
+              handler={addToCartHandler}/>
+            ))
+          }
         </div>
-        <article>
+        {
+         searchData&&searchData?.totalPages>1&&
+          <article>
           <button disabled={!isPrevPage} onClick={()=>{setPage((pre)=>pre-1)}}>Prev</button>
           <span>
             {page} of {4}
           </span>
           <button disabled={!isNextPage} onClick={()=>{setPage((pre)=>pre+1)}}>Next</button>
         </article>
+        }
       </main>
     </div>
   );
