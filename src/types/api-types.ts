@@ -31,3 +31,33 @@ export type ProductResponse={
     data:Product[];
     error:string;
 }
+
+export type  CategoryResponse={
+    status:string;
+    statusCode:number;
+    category:string[];
+    error:string;
+}
+
+export type SearchProductResponse ={
+    status:string;
+    statusCode:number;
+    totalPages:number;
+    data:Product[];
+    error:string;
+
+}
+
+export type SearchProductRequest = {
+  price:number;
+  page:number;
+  category:string;
+  sort:string;
+  search:string
+}
+
+export type NewProductRequest={
+    id:string;
+    formData:FormData;
+
+}
