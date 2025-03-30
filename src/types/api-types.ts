@@ -61,3 +61,10 @@ export type NewProductRequest={
     formData:FormData;
 
 }
+
+export type ProductDetails={
+    status:string;
+    statusCode:number;
+    data:Product;
+    error:string
+}
