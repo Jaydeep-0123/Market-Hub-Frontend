@@ -1,25 +1,45 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { ChangeEvent, FormEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { FaTrash } from "react-icons/fa";
 import AdminSidebar from "../../../components/admin/AdminSidebar";
+import { useSelector } from "react-redux";
+import { UserReducerInitialState } from "../../../types/reducer-types";
+import { useProductsDetailsQuery } from "../../../redux/api/productAPI";
+import { useParams } from "react-router-dom";
+import Loader from "../../../components/Loader";
 
 const img =
   "https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8c2hvZXN8ZW58MHx8MHx8&w=1000&q=804";
 
 const Productmanagement = () => {
-  const [price, setPrice] = useState<number>(2000);
-  const [stock, setStock] = useState<number>(10);
-  const [name, setName] = useState<string>("Puma Shoes");
-  const [photo, setPhoto] = useState<string>(img);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [category, setCategory] = useState<string>("footwear");
 
+  const {id}=useParams();
+ 
+  const {user}=useSelector((state:{userReducer:UserReducerInitialState})=>state.userReducer);
+
+  const {data,isLoading}=useProductsDetailsQuery(id!);
+  
+
+  const [product,setProduct]=useState({
+    _id:"",
+    name:"",
+    price:0,
+    category:"",
+    photo:"",
+    stock:0
+  })
+
+  const {_id,name,price,category,photo,stock}=product;
+  
+ 
+  
   const [priceUpdate, setPriceUpdate] = useState<number>(price);
   const [stockUpdate, setStockUpdate] = useState<number>(stock);
-  const [nameUpdate, setNameUpdate] = useState<string>(name);
+  const [nameUpdate, setNameUpdate] = useState(name);
   const [categoryUpdate, setCategoryUpdate] = useState<string>(category);
   const [photoUpdate, setPhotoUpdate] = useState<string>(photo);
   const [photoFile, setPhotoFile] = useState<File>();
+
 
   const changeImageHandler = (e: ChangeEvent<HTMLInputElement>) => {
     const file: File | undefined = e.target.files?.[0];
@@ -39,19 +59,30 @@ const Productmanagement = () => {
 
   const submitHandler = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
-    setName(nameUpdate);
-    setPrice(priceUpdate);
-    setStock(stockUpdate);
-    setPhoto(photoUpdate);
+   
   };
+
+ useEffect(()=>{
+  if(data)
+  {
+    setProduct(data.data)
+    setNameUpdate(data.data.name);
+    setCategoryUpdate(data.data.category);
+    setPriceUpdate(data.data.price);
+    setStockUpdate(data.data.stock);
+  }  
+ },[data])
 
   return (
     <div className="admin-container">
       <AdminSidebar />
       <main className="product-management">
-        <section>
-          <strong>ID - fsdfsfsggfgdf</strong>
-          <img src={photo} alt="Product" />
+        {
+          isLoading?<Loader/>:
+           <>
+           <section>
+          <strong>ID - {_id}</strong>
+          <img src={`http://localhost:8000/${photo}`} alt="Product" />
           <p>{name}</p>
           {stock > 0 ? (
             <span className="green">{stock} Available</span>
@@ -113,6 +144,8 @@ const Productmanagement = () => {
             <button type="submit">Update</button>
           </form>
         </article>
+           </>
+        }
       </main>
     </div>
   );
