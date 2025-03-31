@@ -4,7 +4,7 @@ import { FaTrash } from "react-icons/fa";
 import AdminSidebar from "../../../components/admin/AdminSidebar";
 import { useSelector } from "react-redux";
 import { UserReducerInitialState } from "../../../types/reducer-types";
-import { useProductsDetailsQuery } from "../../../redux/api/productAPI";
+import { useDeleteProductMutation, useProductsDetailsQuery, useUpdateProductMutation } from "../../../redux/api/productAPI";
 import { useParams } from "react-router-dom";
 import Loader from "../../../components/Loader";
 
@@ -40,6 +40,8 @@ const Productmanagement = () => {
   const [photoUpdate, setPhotoUpdate] = useState<string>(photo);
   const [photoFile, setPhotoFile] = useState<File>();
 
+  const [updateProduct] = useUpdateProductMutation();
+  const [deleteProduct] = useDeleteProductMutation();
 
   const changeImageHandler = (e: ChangeEvent<HTMLInputElement>) => {
     const file: File | undefined = e.target.files?.[0];
@@ -59,7 +61,19 @@ const Productmanagement = () => {
 
   const submitHandler = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
-   
+    const formData=new FormData();
+     
+    if(nameUpdate)
+      formData.set("name",nameUpdate);
+    if(priceUpdate)
+      formData.set('price',priceUpdate.toString());
+    if(stockUpdate!==undefined)
+      formData.set('stock',stockUpdate.toString());
+    if(categoryUpdate)
+      formData.set('category',categoryUpdate);
+    if(photoFile)
+      formData.set('photo',photoFile);
+
   };
 
  useEffect(()=>{

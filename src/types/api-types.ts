@@ -68,3 +68,21 @@ export type ProductDetails={
     data:Product;
     error:string
 }
+
+export type UpdateProductRequest={
+    formData:FormData;
+    userId:string;
+    productId:string;
+}
+
+export type ProductUpdateResponse={
+    status:string;
+    statusCode:number;
+    msg:string;
+    error:string;
+}
+
+export type DeleteProductRequest={
+   userId:string;
+   productId:string
+}

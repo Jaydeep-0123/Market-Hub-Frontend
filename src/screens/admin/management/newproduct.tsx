@@ -21,6 +21,7 @@ const NewProduct = () => {
   
   const [newProduct]=useNewProductMutation();
   
+  
   const changeImageHandler = (e: ChangeEvent<HTMLInputElement>) => {
     const file: File | undefined = e.target.files?.[0];
 
