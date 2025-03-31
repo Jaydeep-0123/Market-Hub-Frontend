@@ -1,5 +1,5 @@
 import {fetchBaseQuery,createApi} from '@reduxjs/toolkit/query/react';
-import { CategoryResponse, MessageResponse, NewProductRequest, ProductDetails, ProductResponse, SearchProductRequest, SearchProductResponse } from '../../types/api-types';
+import { CategoryResponse, DeleteProductRequest, MessageResponse, NewProductRequest, ProductDetails, ProductResponse, ProductUpdateResponse, SearchProductRequest, SearchProductResponse, UpdateProductRequest } from '../../types/api-types';
 
 export const productAPI = createApi({
   reducerPath: "productApi",
@@ -18,7 +18,24 @@ export const productAPI = createApi({
 
     }}),
     newProduct:builder.mutation<MessageResponse,NewProductRequest>({query:({formData,id})=>({url:`newProduct?id=${id}`,method:"POST",body:formData})}),
-    productsDetails:builder.query<ProductDetails,string>({query:(id)=>id})
+    productsDetails:builder.query<ProductDetails,string>({query:(id)=>id}),
+
+    updateProduct:builder.mutation<ProductUpdateResponse,UpdateProductRequest>({
+      query:({formData,userId,productId})=>({
+        url:`update/product/${productId}?id=${userId}`,
+        method:"PUT",
+        body:formData
+      })
+    }),
+
+    deleteProduct:builder.mutation<ProductUpdateResponse,DeleteProductRequest>({
+      query:({productId,userId})=>({
+        url:`delete/${productId}?id=${userId}`,
+        method:"DELETE",
+      })
+    })
+
+
   }),
 });
 
@@ -28,5 +45,7 @@ export const {
         useCategoriesQuery,
         useSearchProductsQuery,
         useNewProductMutation,
-        useProductsDetailsQuery
+        useProductsDetailsQuery,
+        useDeleteProductMutation,
+        useUpdateProductMutation
       } = productAPI;
