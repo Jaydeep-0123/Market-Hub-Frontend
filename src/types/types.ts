@@ -8,7 +8,7 @@ export interface User {
   _id:string
 }
 
-export interface Product
+export type Product =
 {
    name:string;
    photo:string;
@@ -16,4 +16,21 @@ export interface Product
    stock:number;
    category:string;
    _id:string
+}
+
+export type SippingInfo={
+  address:string;
+  city:string;
+  state:string;
+  country:string;
+  pincode:string
+}
+
+export type CartItem={
+  name:string;
+  photo:string;
+  price:number;
+  productId:string;
+  quantity:number;
+  stock:number;
 }

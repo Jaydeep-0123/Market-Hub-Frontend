@@ -61,7 +61,7 @@ if(productIsError)
           <input
             type="range"
             min={100}
-            max={100000}
+            max={1000000}
             value={maxPrice}
             onChange={(e) => {
               setPrice(Number(e.target.value));

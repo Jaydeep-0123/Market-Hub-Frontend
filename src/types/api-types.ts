@@ -82,6 +82,13 @@ export type ProductUpdateResponse={
     error:string;
 }
 
+export type DeleteProductResponse={
+    status:string;
+    statusCode:number;
+    message:string;
+    error:string;
+}
+
 export type DeleteProductRequest={
    userId:string;
    productId:string
