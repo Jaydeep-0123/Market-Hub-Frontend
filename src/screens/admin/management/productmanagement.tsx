@@ -4,9 +4,10 @@ import { FaTrash } from "react-icons/fa";
 import AdminSidebar from "../../../components/admin/AdminSidebar";
 import { useSelector } from "react-redux";
 import { UserReducerInitialState } from "../../../types/reducer-types";
-import { useDeleteProductMutation, useProductsDetailsQuery, useUpdateProductMutation } from "../../../redux/api/productAPI";
-import { useParams } from "react-router-dom";
+import { useAllProductsQuery, useDeleteProductMutation, useProductsDetailsQuery, useUpdateProductMutation } from "../../../redux/api/productAPI";
+import { useNavigate, useParams } from "react-router-dom";
 import Loader from "../../../components/Loader";
+import { toast } from "react-toastify";
 
 const img =
   "https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8c2hvZXN8ZW58MHx8MHx8&w=1000&q=804";
@@ -14,12 +15,13 @@ const img =
 const Productmanagement = () => {
 
   const {id}=useParams();
+  const navigate=useNavigate();
  
   const {user}=useSelector((state:{userReducer:UserReducerInitialState})=>state.userReducer);
 
   const {data,isLoading}=useProductsDetailsQuery(id!);
   
-
+ 
   const [product,setProduct]=useState({
     _id:"",
     name:"",
@@ -59,7 +61,7 @@ const Productmanagement = () => {
     }
   };
 
-  const submitHandler = (e: FormEvent<HTMLFormElement>): void => {
+  const submitHandler =async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData=new FormData();
      
@@ -74,7 +76,47 @@ const Productmanagement = () => {
     if(photoFile)
       formData.set('photo',photoFile);
 
+  
+    if (!user?._id || !data?.data._id) {
+      console.error("User ID or Product ID is missing");
+      return;
+    }
+  
+    const res = await updateProduct({
+      formData,
+      userId: user._id,
+      productId: data.data._id,
+    });
+  if(res.data?.statusCode===200)
+  {
+      toast.success(res.data?.msg)
+      navigate("/admin/product")
+  }
+  else
+  {
+    toast.error("Something went wrong")
+  }
+    
   };
+
+
+  const deleteHandler=async()=>{
+    if(!user?._id || !data?.data._id)
+    {
+      console.error("User ID or Product ID is missing");
+      return;
+    }
+    const res=await deleteProduct({
+      userId:user._id,
+      productId:data.data._id
+    })
+    if(res.data?.statusCode===200)
+    {
+      toast.success(res.data.message);
+      navigate('/admin/product')
+    }
+
+  }
 
  useEffect(()=>{
   if(data)
@@ -106,7 +148,7 @@ const Productmanagement = () => {
           <h3>₹{price}</h3>
         </section>
         <article>
-          <button className="product-delete-btn">
+          <button className="product-delete-btn" onClick={deleteHandler}>
             <FaTrash />
           </button>
           <form onSubmit={submitHandler}>

@@ -2,26 +2,35 @@ import React, { useEffect, useState } from "react";
 import { VscError } from "react-icons/vsc";
 import CartItems from "../components/CartItems";
 import {Link} from 'react-router-dom';
+import { useDispatch, useSelector } from "react-redux";
+import { CartReducerInitialState } from "../types/reducer-types";
+import { CartItem } from "../types/types";
+import { addToCart, removeCartItem } from "../redux/reducer/cartReducer";
 function Cart()
 {
+  const {cartItems,subtotal,tax,total,shippingCharges,discount}=useSelector((state:{cartReducer:CartReducerInitialState})=>state.cartReducer);
+     
+    const disPatch=useDispatch();
     const [couponCode,setCouponCode]=useState("");
     const [isValidCouponCode,setIsValidCouponCode]=useState(false);
-    const subTotal=4000;
-    const cartItems=[
-        {
-            productId:"21221",
-            photo:"https://m.media-amazon.com/images/I/71jG+e7roXL._SL1500_.jpg",
-            name:"macbook",
-            price:3000,
-            quantity:4,
-            stock:10
+  
+    const incrementHandler = (cartItem:CartItem)=>
+    {
+      disPatch(addToCart({...cartItem,quantity:cartItem.quantity+1}))
+    }
+    
+    
+    const decrementHandler=(cartItem:CartItem)=>
+    {
+     disPatch(addToCart({...cartItem,quantity:cartItem.quantity-1}))
 
-        },
-    ];
-    const tax=Math.round(subTotal*0.18);
-    const shipingCharges=200;
-    const discount=400;
-    const total=subTotal+tax+shipingCharges;
+    }
+
+   const removeHandler=(id:string)=>
+   {
+      disPatch(removeCartItem(id))
+   }
+
 
     useEffect(()=>{
     const timeOutId = setTimeout(()=>{
@@ -38,7 +47,7 @@ function Cart()
       <main>
         {
          cartItems.length>0? cartItems.map((i,index)=>(
-            <CartItems cartItem={i} key={index}/>
+            <CartItems cartItem={i} incrementHandler={incrementHandler} decrementHandler={decrementHandler} removeHandler={removeHandler} key={index}/>
           )):(
             <h1>No Item Added</h1>
           )
@@ -46,8 +55,8 @@ function Cart()
        
       </main>
       <aside>
-        <p>Subtotal: ₹{subTotal}</p>
-        <p>Shipping Charges: ₹{shipingCharges}</p>
+        <p>Subtotal: ₹{subtotal}</p>
+        <p>Shipping Charges: ₹{shippingCharges}</p>
         <p>Tax: ₹{tax}</p>
         <p>
            Discount: <em> - ₹{discount}</em>
