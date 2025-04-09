@@ -1,4 +1,4 @@
-import { Product, User } from "./types";
+import { OrderItem,SippingInfo, Product, User, MyOrder, AllOrders } from "./types";
 
 export type CustomError={
     status:number;
@@ -92,4 +92,33 @@ export type DeleteProductResponse={
 export type DeleteProductRequest={
    userId:string;
    productId:string
+}
+
+export type NewOrderRequest={
+    shippingInfo:SippingInfo;
+    userId:string;
+    subtotal:number;
+    tax:number;
+    shippingCharges:number;
+    discount:number;
+    total:number;
+    orderItems:OrderItem[]
+
+}
+
+export type  MyOrderResponse=
+{
+    status:string;
+    statusCodes:number;
+    message:string;
+    data:MyOrder[];
+    error:string;
+}
+
+export type AllOrdersResponse={
+    status:string;
+    statusCode:number;
+    msg:string;
+    data:AllOrders[];
+    error:string;
 }
