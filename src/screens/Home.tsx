@@ -1,12 +1,11 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
-import ProductCard from '../components/ProductCard'
-import { useLatestProductsQuery } from '../redux/api/productAPI'
+import { useDispatch } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import Loader from '../components/Loader';
-import { CartItem } from '../types/types';
-import { useDispatch } from 'react-redux';
+import ProductCard from '../components/ProductCard';
+import { useLatestProductsQuery } from '../redux/api/productAPI';
 import { addToCart } from '../redux/reducer/cartReducer';
+import { CartItem } from '../types/types';
 
 function Home() {
 
@@ -23,7 +22,7 @@ function Home() {
 
       }
       dispatch(addToCart(cartItem))
-      toast.success("Add to Cart Successfully");
+      toast.success("Added to cart successfully");
     }
 
   if(isError)

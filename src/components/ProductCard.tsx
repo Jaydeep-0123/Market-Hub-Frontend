@@ -23,7 +23,7 @@ function ProductCard({
 }: ProductsProps) {
   return (
     <div className="product-card">
-      <img src={`${import.meta.env.VITE_SERVER}/${photo}`} width={400} height={400} alt={name} />
+      <img src={`${import.meta.env.VITE_SERVER}/${photo}`} width={200} height={200} alt={name} />
       <p >{name}</p>
       <span>₹ {price}</span>
       <div>

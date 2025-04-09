@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { VscError } from "react-icons/vsc";
-import CartItems from "../components/CartItems";
-import {Link} from 'react-router-dom';
 import { useDispatch, useSelector } from "react-redux";
+import { Link } from 'react-router-dom';
+import CartItems from "../components/CartItems";
+import { addToCart, calculatePrice, discountApplied, removeCartItem } from "../redux/reducer/cartReducer";
 import { CartReducerInitialState } from "../types/reducer-types";
 import { CartItem } from "../types/types";
-import { addToCart, removeCartItem } from "../redux/reducer/cartReducer";
+import axios from "axios";
 function Cart()
 {
   const {cartItems,subtotal,tax,total,shippingCharges,discount}=useSelector((state:{cartReducer:CartReducerInitialState})=>state.cartReducer);
@@ -16,6 +17,8 @@ function Cart()
   
     const incrementHandler = (cartItem:CartItem)=>
     {
+      if(cartItem.quantity>=cartItem.stock)
+        return;
       disPatch(addToCart({...cartItem,quantity:cartItem.quantity+1}))
     }
     
@@ -33,16 +36,36 @@ function Cart()
 
 
     useEffect(()=>{
+      const {token:cancelToken,cancel}=axios.CancelToken.source()
     const timeOutId = setTimeout(()=>{
-       if(Math.random()>0.5) setIsValidCouponCode(true);
-        else setIsValidCouponCode(false);
+      axios.get(`http://localhost:8000/api/v1/payment/discount?coupon_Code=${couponCode}`,{
+        cancelToken,
+      })
+      .then((response)=>{
+        disPatch(discountApplied(response.data.discount))
+        setIsValidCouponCode(true);
+        disPatch(calculatePrice());
+        
+      })
+      .catch(()=>{
+        disPatch(discountApplied(0));
+        setIsValidCouponCode(false);
+        disPatch(calculatePrice());
+      })
+       
      },1000);
 
      return ()=>{
         clearTimeout(timeOutId);
+        cancel();
         setIsValidCouponCode(false)
      };
     },[couponCode])
+
+    useEffect(()=>{
+       disPatch(calculatePrice());
+    },[cartItems])
+    
     return <div className="cart">
       <main>
         {
