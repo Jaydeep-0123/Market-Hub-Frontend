@@ -5,7 +5,7 @@ import AdminSidebar from "../../../components/admin/AdminSidebar";
 import { useSelector } from "react-redux";
 import { UserReducerInitialState } from "../../../types/reducer-types";
 import { useAllProductsQuery, useDeleteProductMutation, useProductsDetailsQuery, useUpdateProductMutation } from "../../../redux/api/productAPI";
-import { useNavigate, useParams } from "react-router-dom";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 import Loader from "../../../components/Loader";
 import { toast } from "react-toastify";
 
@@ -19,7 +19,7 @@ const Productmanagement = () => {
  
   const {user}=useSelector((state:{userReducer:UserReducerInitialState})=>state.userReducer);
 
-  const {data,isLoading}=useProductsDetailsQuery(id!);
+  const {data,isLoading,isError}=useProductsDetailsQuery(id!);
   
  
   const [product,setProduct]=useState({
@@ -128,6 +128,11 @@ const Productmanagement = () => {
     setStockUpdate(data.data.stock);
   }  
  },[data])
+
+ if(isError)
+ {
+   return <Navigate to={"/404"}/>;
+ }
 
   return (
     <div className="admin-container">

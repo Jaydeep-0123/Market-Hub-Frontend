@@ -1,60 +1,84 @@
+/* eslint-disable no-unsafe-optional-chaining */
 import { FaTrash } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import AdminSidebar from "../../../components/admin/AdminSidebar";
-import { OrderItem } from "../../../models/types";
-import { server } from "../../../redux/store";
+import Loader from "../../../components/Loader";
+import { useDeleteOrderMutation, useSingleOrdersQuery, useUpdateOrderMutation } from "../../../redux/api/orderAPI";
+import { AllOrders, OrderItem } from "../../../types/types";
+import { toast } from "react-toastify";
 
-const img =
-  "https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8c2hvZXN8ZW58MHx8MHx8&w=1000&q=804";
 
-const orderItems: OrderItem[] = [
-  {
-    name: "Puma Shoes",
-    photo: img,
-    id: "asdsaasdas",
-    quantity: 4,
-    price: 2000,
-  },
-];
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+
+const defaultData:AllOrders={
+  shippingInfo:{
+    address:"",
+    city:"",
+    state:"",
+    country:"",
+    pincode:""
+  },  
+    status: "Processing",
+    subtotal: 0,
+    discount: 0,
+    shippingCharges: 0,
+    tax: 0,
+    total: 0,
+    orderItems:[],
+    userId:{
+      _id:"",
+      name:""
+    },
+    _id:""
+};
 
 const TransactionManagement = () => {
-  const [order, setOrder] = useState({
-    name: "Puma Shoes",
-    address: "77 black street",
-    city: "Neyword",
-    state: "Nevada",
-    country: "US",
-    pinCode: 242433,
-    status: "Processing",
-    subtotal: 4000,
-    discount: 1200,
-    shippingCharges: 0,
-    tax: 200,
-    total: 4000 + 200 + 0 - 1200,
-    orderItems,
-  });
+ 
+   const {id}=useParams();
+   const navigate=useNavigate();
+   const {data,isLoading,isError}=useSingleOrdersQuery(id!)
 
-  const {
-    name,
-    address,
-    city,
-    country,
-    state,
-    pinCode,
-    subtotal,
-    shippingCharges,
-    tax,
-    discount,
-    total,
-    status,
-  } = order;
+   const {shippingInfo,orderItems,userId:{name,_id},status,tax,subtotal,total,discount,shippingCharges}=data?.data||defaultData;
+  
+   const [updateOrder]=useUpdateOrderMutation();
+   const [deleteOrder]=useDeleteOrderMutation();
 
-  const updateHandler = (): void => {
-    setOrder((prev) => ({
-      ...prev,
-      status: "Shipped",
-    }));
-  };
+  const updateHandler=async()=>
+  {
+    const res=await updateOrder({userId:_id,orderId:id!});
+    if(res.data?.data)
+    {
+      toast.success("Status Process Successfully")
+      navigate("/admin/transaction");
+    }
+    else
+    {
+      toast.error("Failed to Process Status");
+    }
+    
+  }
+
+  const deleteHandler=async()=>
+  {
+    if(window.confirm("Are you sure you want to delete this order?"))
+    {
+      const res=await deleteOrder({userId:_id,orderId:id!});
+      if(res.data?.statusCode===200)
+      {
+        toast.success("Order Deleted Successfully");
+        navigate("/admin/transaction");
+      }
+      else
+      {
+        toast.error("Failed to Delete Order");
+      }
+    }
+  }
+
+  if(isError)
+  {
+    return <Navigate to={"/404"}/>
+  }
 
   return (
     <div className="admin-container">
@@ -67,11 +91,11 @@ const TransactionManagement = () => {
         >
           <h2>Order Items</h2>
 
-          {orderItems.map((i) => (
+          {isLoading?<Loader/>:orderItems.map((i) => (
             <ProductCard
               key={i._id}
               name={i.name}
-              photo={`${server}/${i.photo}`}
+              photo={i.photo}
               productId={i.productId}
               _id={i._id}
               quantity={i.quantity}
@@ -88,7 +112,7 @@ const TransactionManagement = () => {
           <h5>User Info</h5>
           <p>Name: {name}</p>
           <p>
-            Address: {`${address}, ${city}, ${state}, ${country} ${pinCode}`}
+            Address: {`${shippingInfo.address}, ${shippingInfo.city}, ${shippingInfo.state}, ${shippingInfo.country} ${shippingInfo.pincode}`}
           </p>
           <h5>Amount Info</h5>
           <p>Subtotal: {subtotal}</p>
@@ -129,7 +153,7 @@ const ProductCard = ({
   productId,
 }: OrderItem) => (
   <div className="transaction-product-card">
-    <img src={photo} alt={name} />
+    <img src={`http://localhost:8000/${photo}`} alt={name} />
     <Link to={`/product/${productId}`}>{name}</Link>
     <span>
       ₹{price} X {quantity} = ₹{price * quantity}
