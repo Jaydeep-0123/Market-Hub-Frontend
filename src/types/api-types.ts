@@ -106,6 +106,27 @@ export type NewOrderRequest={
 
 }
 
+export type UpdateOrderRequest={
+    userId:string;
+    orderId:string;
+}
+
+export type UpdateOrderResponse={
+    status:string;
+    statusCode:number;
+    message:string;
+    data:MyOrder
+    error:string;
+
+}
+
+export type DeleteOrderResponse={
+    status:string;
+    statusCode:number;
+    message:string;
+    error:"";
+}
+
 export type  MyOrderResponse=
 {
     status:string;
@@ -120,5 +141,13 @@ export type AllOrdersResponse={
     statusCode:number;
     msg:string;
     data:AllOrders[];
+    error:string;
+}
+
+export type SingleOrderResponse={
+    status:string;
+    statusCode:number;
+    message:string;
+    data:AllOrders;
     error:string;
 }

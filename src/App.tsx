@@ -12,6 +12,8 @@ import { userExist, userNotExist } from "./redux/reducer/userReducer.ts";
 import { getUser } from "./redux/api/userAPI.ts";
 import { UserReducerInitialState } from "./types/reducer-types.ts";
 import ProtectedRoute from "./components/ProtectedRoute.tsx";
+const Checkout=lazy(()=>import("./screens/Checkout.tsx"));
+const Notfound=lazy(()=>import("./screens/Notfound.tsx"));
 const Login = lazy(() => import("./screens/Login.tsx"));
 const Home = lazy(() => import("./screens/Home.tsx"));
 const Search = lazy(() => import("./screens/Search.tsx"));
@@ -70,8 +72,9 @@ function App() {
             {/* Logged In User  */}
             <Route element={<ProtectedRoute isAuthenticated={user?true:false}/>}>
               <Route path="/shipping" element={<Shipping />} />
-              <Route path="/orders" element={<Order />} />
               <Route path="/order/:id" element={<OrderDetails />} />
+              <Route path="/orders" element={<Order />} />
+              <Route path="/pay" element={<Checkout />} />
             </Route>
             {/* Admin Routes */}
             
@@ -110,7 +113,7 @@ function App() {
                 element={<TransactionManagement />}
               />
             </Route>
-            ;
+            <Route path="*" element={<Notfound/>}/>
           </Routes>
         </Suspense>
         <ToastContainer />
