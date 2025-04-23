@@ -7,18 +7,29 @@ import {
 } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
+import { NewOrderRequest } from "../types/api-types";
+import { useDispatch, useSelector } from "react-redux";
+import { useNewOrderMutation } from "../redux/api/orderAPI";
+import { resetCart } from "../redux/reducer/cartReducer";
+import { RootState } from "../redux/store";
 
 const stripePromise = loadStripe(
-  "pk_test_51QyVG22cosWct8vHrBpHTVBew6CzSIlCExbyPe7RJeAbBnvsiCTv1x3N0g4oABou4UzECXwPsVz3IeGJXIdxOpa800fzTV26BI"
+  import.meta.env.VITE_STRIPE_KEY
 );
 
 function CheckoutForm() {
   const stripe = useStripe();
   const elements = useElements();
   const navigate=useNavigate();
+  const disPatch=useDispatch();
 
+  const {user}=useSelector((state:RootState)=>state.userReducer);
+  const {shippingInfo,cartItems,subtotal,tax,discount,shippingCharges,total}=useSelector((state:RootState)=>state.cartReducer);
+  
   const [isProcessing, setIsProcessing] = useState(false);
+
+  const [newOrder]=useNewOrderMutation();
 
   async function submitHandler(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -27,6 +38,18 @@ function CheckoutForm() {
       return;
     }
     setIsProcessing(true);
+
+   
+    const orderData:NewOrderRequest={
+      shippingInfo,
+      orderItems:cartItems,
+      subtotal,
+      tax,
+      discount,
+      shippingCharges,
+      total,
+      userId:user?._id??""
+    }
 
     const {paymentIntent,error} = await stripe.confirmPayment({
       elements,
@@ -40,7 +63,10 @@ function CheckoutForm() {
     }
     if(paymentIntent.status==="succeeded")
     {
-      console.log("Placing Order");
+
+      const res=await newOrder(orderData);
+      disPatch(resetCart());
+      console.log(res);
       navigate("/orders");
       
     }
@@ -58,6 +84,11 @@ function CheckoutForm() {
 }
 
 function Checkout() {
+  const location=useLocation();
+  const clientSecret:string|undefined=location.state;
+  if(!clientSecret)
+    return <Navigate to={"/shipping"}/>
+
   return (
     <Elements
       options={{

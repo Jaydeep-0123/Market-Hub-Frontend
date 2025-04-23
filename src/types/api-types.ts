@@ -151,3 +151,21 @@ export type SingleOrderResponse={
     data:AllOrders;
     error:string;
 }
+
+export type AllUsersResponse={
+    status:string;
+    statusCode:number;
+    data:User[];
+    error:string;
+}
+
+export type DeleteUserResponse={
+    status:string;
+    statusCode:number;
+    message: string;
+}
+
+export type DeleteUserRequest={
+    userId:string;
+    adminUserId:string
+}
