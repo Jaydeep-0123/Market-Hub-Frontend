@@ -1,14 +1,18 @@
-import React, { ChangeEvent, useEffect, useState } from 'react'
-import { BiArrowBack } from 'react-icons/bi'
-import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom'
+import axios from 'axios';
+import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
+import { BiArrowBack } from 'react-icons/bi';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { CartReducerInitialState } from '../types/reducer-types';
+import { saveShippingInfo } from '../redux/reducer/cartReducer';
 
 function Shipping() {
 
-    const {cartItems}=useSelector((state:{cartReducer:CartReducerInitialState})=>state.cartReducer);
+    const {cartItems,total}=useSelector((state:{cartReducer:CartReducerInitialState})=>state.cartReducer);
   
   const navigate=useNavigate();
+  const disPatch=useDispatch();
     const [shippingInfo,setShippingInfo]=useState({
         address:"",
         city:"",
@@ -21,6 +25,38 @@ function Shipping() {
         setShippingInfo((prev)=>({...prev,[e.target.name]: e.target.value}))
     }
 
+  async function submitHandler(e:FormEvent<HTMLFormElement>)
+  {
+    disPatch(saveShippingInfo(shippingInfo));
+    e.preventDefault();
+    try 
+    {
+        const response=await axios.post(`http://localhost:8000/api/v1/payment/createPayment`,{
+          amount:total,
+        },{
+          headers:{
+            "Content-Type":"application/json"
+          }
+        }
+        
+      )
+      if(response.data.statusCode===200)
+      {
+    
+        navigate("/pay",{
+          state:response.data.data
+        })
+      }
+        
+    } 
+    catch (error) 
+    {
+      console.log(error);
+      toast.error("Something Went Wrong")
+      
+    }
+  }
+
     useEffect(()=>{
       if(cartItems.length===0)
       {
@@ -30,7 +66,7 @@ function Shipping() {
   return (
     <div className='shipping'>
      <button className='back-btn' onClick={()=>{navigate("/cart")}}><BiArrowBack/></button>
-     <form action="">
+     <form onSubmit={submitHandler}>
 
         <h1>Shipping Address</h1>
 
