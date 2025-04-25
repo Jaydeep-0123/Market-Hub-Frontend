@@ -2,13 +2,13 @@ import { ReactElement, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { Column } from "react-table";
+import { toast } from "react-toastify";
 import AdminSidebar from "../../components/admin/AdminSidebar";
 import TableHOC from "../../components/admin/TableHOC";
-import { UserReducerInitialState } from "../../types/reducer-types";
-import { useAllOrdersQuery } from "../../redux/api/orderAPI";
-import { CustomError } from "../../types/api-types";
-import { toast } from "react-toastify";
 import Loader from "../../components/Loader";
+import { useAllOrdersQuery } from "../../redux/api/orderAPI";
+import { RootState } from "../../redux/store";
+import { CustomError } from "../../types/api-types";
 
 interface DataType {
   user: string;
@@ -49,7 +49,7 @@ const columns: Column<DataType>[] = [
 
 const Transaction = () => {
 
-  const {user}=useSelector((state:{userReducer:UserReducerInitialState})=>state.userReducer)
+  const {user}=useSelector((state:RootState)=>state.userReducer)
 
   const {isLoading,data,isError,error}=useAllOrdersQuery(user?._id??"");
 
