@@ -74,3 +74,42 @@ export type AllOrders={
     _id:string;
   }
 }
+
+type Count={
+    revanue: number;
+    product: number;
+    user: number;
+    order: number;
+}
+
+type Percent={
+    revanue: number;
+    userPercent: number;
+    productPercent: number;
+    orderPercent: number;
+}
+
+type GenderRatio={
+  male: number;
+    female: number;
+}
+
+type LatestTransaction={
+  _id:string;
+  discount:number;
+  amount:number;
+  quantity:number;
+  status:string;
+}
+
+export type Stats={
+  categoryCount:Record<string, number>[];
+      percent:Percent;
+      count:Count;
+      userGenderRatio:GenderRatio;
+      chart:{
+        order:number[];
+        revanue:number[],
+      },
+      latestTransiction:LatestTransaction[]
+};

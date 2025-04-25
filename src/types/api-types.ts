@@ -1,4 +1,4 @@
-import { OrderItem,SippingInfo, Product, User, MyOrder, AllOrders } from "./types";
+import { OrderItem,SippingInfo, Product, User, MyOrder, AllOrders, Stats } from "./types";
 
 export type CustomError={
     status:number;
@@ -48,33 +48,6 @@ export type SearchProductResponse ={
 
 }
 
-export type SearchProductRequest = {
-  price:number;
-  page:number;
-  category:string;
-  sort:string;
-  search:string
-}
-
-export type NewProductRequest={
-    id:string;
-    formData:FormData;
-
-}
-
-export type ProductDetails={
-    status:string;
-    statusCode:number;
-    data:Product;
-    error:string
-}
-
-export type UpdateProductRequest={
-    formData:FormData;
-    userId:string;
-    productId:string;
-}
-
 export type ProductUpdateResponse={
     status:string;
     statusCode:number;
@@ -87,28 +60,6 @@ export type DeleteProductResponse={
     statusCode:number;
     message:string;
     error:string;
-}
-
-export type DeleteProductRequest={
-   userId:string;
-   productId:string
-}
-
-export type NewOrderRequest={
-    shippingInfo:SippingInfo;
-    userId:string;
-    subtotal:number;
-    tax:number;
-    shippingCharges:number;
-    discount:number;
-    total:number;
-    orderItems:OrderItem[]
-
-}
-
-export type UpdateOrderRequest={
-    userId:string;
-    orderId:string;
 }
 
 export type UpdateOrderResponse={
@@ -164,6 +115,65 @@ export type DeleteUserResponse={
     statusCode:number;
     message: string;
 }
+
+export type StatsResponse={
+    status:string;
+    statusCode:number;
+    data:Stats
+    error:string;
+}
+
+export type SearchProductRequest = {
+  price:number;
+  page:number;
+  category:string;
+  sort:string;
+  search:string
+}
+
+export type NewProductRequest={
+    id:string;
+    formData:FormData;
+
+}
+
+export type ProductDetails={
+    status:string;
+    statusCode:number;
+    data:Product;
+    error:string
+}
+
+export type UpdateProductRequest={
+    formData:FormData;
+    userId:string;
+    productId:string;
+}
+
+
+export type DeleteProductRequest={
+   userId:string;
+   productId:string
+}
+
+export type NewOrderRequest={
+    shippingInfo:SippingInfo;
+    userId:string;
+    subtotal:number;
+    tax:number;
+    shippingCharges:number;
+    discount:number;
+    total:number;
+    orderItems:OrderItem[]
+
+}
+
+export type UpdateOrderRequest={
+    userId:string;
+    orderId:string;
+}
+
+
 
 export type DeleteUserRequest={
     userId:string;
