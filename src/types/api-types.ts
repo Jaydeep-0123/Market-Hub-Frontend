@@ -1,4 +1,4 @@
-import { OrderItem,SippingInfo, Product, User, MyOrder, AllOrders, Stats } from "./types";
+import { OrderItem,SippingInfo, Product, User, MyOrder, AllOrders, Stats, Pie, Bar, Line } from "./types";
 
 export type CustomError={
     status:number;
@@ -120,6 +120,27 @@ export type StatsResponse={
     status:string;
     statusCode:number;
     data:Stats
+    error:string;
+}
+
+export type PieResponse={
+    status:string;
+    statusCode:number;
+    charts:Pie;
+    error:string;
+}
+
+export type BarResponse={
+    status:string;
+    StatusCode:number;
+    charts:Bar;
+    error:string;
+}
+
+export type LineResponse={
+    status:string;
+    StatusCode:number;
+    charts:Line;
     error:string;
 }
 

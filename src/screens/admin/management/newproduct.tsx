@@ -41,7 +41,7 @@ const NewProduct = () => {
  const onSubmitHandler=async(e:FormEvent<HTMLFormElement>)=>
  {
     e.preventDefault();
-    if(!name || !price || !category || !photo || !stock)
+    if(!name || !price || !category || !photo || stock<0)
     {
       toast.error("All Field is required");
     }

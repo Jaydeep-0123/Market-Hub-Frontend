@@ -1,6 +1,7 @@
 import { useState } from "react";
 import AdminSidebar from "../../../components/admin/AdminSidebar";
-
+import head from '../../../assets/images/heads.png'
+import tail from '../../../assets/images/tails.png'
 const Toss = () => {
   const [angle, setAngle] = useState<number>(0);
 
@@ -16,14 +17,14 @@ const Toss = () => {
         <h1>Toss</h1>
         <section>
           <article
-            className="tosscoin"
+            // className="tosscoin"
             onClick={flipCoin}
             style={{
               transform: `rotateY(${angle}deg)`,
             }}
-          >
-            <div></div>
-            <div></div>
+          > 
+           <img src={head} width={200} height={200} alt="" style={{margin:"3rem",marginBottom:"40%"}}/>
+           <img src={tail} width={200} height={200} alt="" style={{margin:"3rem",marginBottom:"40%"}}/>
           </article>
         </section>
       </main>
