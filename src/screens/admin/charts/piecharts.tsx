@@ -1,18 +1,36 @@
+import { useSelector } from "react-redux";
+import { Navigate } from "react-router-dom";
+import { categories } from "../../../assets/data.json";
 import AdminSidebar from "../../../components/admin/AdminSidebar";
 import { DoughnutChart, PieChart } from "../../../components/admin/Charts";
-import data from "../../../assets/data.json";
+import Loader from "../../../components/Loader";
+import { usePieQuery } from "../../../redux/api/dashboardAPI";
+import { RootState } from "../../../redux/store";
 
 const PieCharts = () => {
+
+  const {user}=useSelector((state:RootState)=>state.userReducer);
+  const {data,isError,isLoading}=usePieQuery(user?._id??"");
+
+  const pie=data?.charts;
+
+  
+
+  if(isError)
+  {
+     return <Navigate to={"/admin/dashboard"}/>
+  }
   return (
     <div className="admin-container">
       <AdminSidebar />
-      <main className="chart-container">
+      {
+        isLoading?<Loader/>:<main className="chart-container">
         <h1>Pie & Doughnut Charts</h1>
         <section>
           <div>
             <PieChart
               labels={["Processing", "Shipped", "Delivered"]}
-              data={[12, 9, 13]}
+              data={[pie?.orderFullfllMent.processing??0,pie?.orderFullfllMent.shipped??0,pie?.orderFullfllMent.delivered??0]}
               backgroundColor={[
                 `hsl(110,80%, 80%)`,
                 `hsl(110,80%, 50%)`,
@@ -27,10 +45,10 @@ const PieCharts = () => {
         <section>
           <div>
             <DoughnutChart
-              labels={data.categories.map((i) => i.heading)}
-              data={data.categories.map((i) => i.value)}
-              backgroundColor={data.categories.map(
-                (i) => `hsl(${i.value * 4}, ${i.value}%, 50%)`
+              labels={pie?.productCategories.map((i) => Object.keys(i)[0])||[]}
+              data={pie?.productCategories.map((i) => Object.values(i)[0])||[]}
+              backgroundColor={categories.map(
+                (i) => `hsl(${i.value * 4}, ${Object.values(i)[0]}%, 50%)`
               )}
               legends={false}
               offset={[0, 0, 0, 80]}
@@ -43,7 +61,7 @@ const PieCharts = () => {
           <div>
             <DoughnutChart
               labels={["In Stock", "Out Of Stock"]}
-              data={[40, 20]}
+              data={[pie?.stockAvailablity.inStock??0,pie?.stockAvailablity.outOfStock??0]}
               backgroundColor={["hsl(269,80%,40%)", "rgb(53, 162, 255)"]}
               legends={false}
               offset={[0, 80]}
@@ -63,7 +81,13 @@ const PieCharts = () => {
                 "Production Cost",
                 "Net Margin",
               ]}
-              data={[32, 18, 5, 20, 25]}
+              data={[
+                pie?.revenueDistribution.marketingCost??0,
+                pie?.revenueDistribution.discount??0,
+                pie?.revenueDistribution.brunt??0,
+                pie?.revenueDistribution.productionCost??0,
+                pie?.revenueDistribution.netMargin??0
+              ]}
               backgroundColor={[
                 "hsl(110,80%,40%)",
                 "hsl(19,80%,40%)",
@@ -86,7 +110,11 @@ const PieCharts = () => {
                 "Adult (20-40)",
                 "Older (above 40)",
               ]}
-              data={[30, 250, 70]}
+              data={[
+                pie?.userAgeGroup.teen??0,
+                pie?.userAgeGroup.adult??0,
+                pie?.userAgeGroup.old??0,
+              ]}
               backgroundColor={[
                 `hsl(10, ${80}%, 80%)`,
                 `hsl(10, ${80}%, 50%)`,
@@ -102,13 +130,17 @@ const PieCharts = () => {
           <div>
             <DoughnutChart
               labels={["Admin", "Customers"]}
-              data={[40, 250]}
+              data={[
+                pie?.adminCustomer.admin??0,
+                pie?.adminCustomer.customer??0
+              ]}
               backgroundColor={[`hsl(335, 100%, 38%)`, "hsl(44, 98%, 50%)"]}
               offset={[0, 50]}
             />
           </div>
         </section>
       </main>
+      }
     </div>
   );
 };
