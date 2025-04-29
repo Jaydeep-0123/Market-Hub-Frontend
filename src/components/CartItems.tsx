@@ -21,7 +21,7 @@ function CartItems({
   const {photo,name,productId,quantity,price}=cartItem;
  return (
     <div className='cart-item'>
-        <img src={`http://localhost:8000/${photo}`} width={400} height={400} alt='image'/>
+        <img src={`${import.meta.env.VITE_SERVER}/${photo}`} width={400} height={400} alt='image'/>
         <article>
             <Link to={`/product/${productId}`}>{name}</Link>{" "}
             <span>₹{price}</span>

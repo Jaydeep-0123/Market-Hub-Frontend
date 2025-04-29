@@ -1,17 +1,16 @@
-import React, { useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { lazy, Suspense } from "react";
-import { ToastContainer } from "react-toastify";
-import Loader from "./components/Loader.tsx";
-import Header from "./components/Header.tsx";
-import OrderDetails from "./screens/OrderDetails.tsx";
 import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "./firebase/firebase.ts";
+import { lazy, Suspense, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { userExist, userNotExist } from "./redux/reducer/userReducer.ts";
-import { getUser } from "./redux/api/userAPI.ts";
-import { UserReducerInitialState } from "./types/reducer-types.ts";
+import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import Header from "./components/Header.tsx";
+import Loader1 from "./components/Loader1.tsx";
 import ProtectedRoute from "./components/ProtectedRoute.tsx";
+import { auth } from "./firebase/firebase.ts";
+import { getUser } from "./redux/api/userAPI.ts";
+import { userExist, userNotExist } from "./redux/reducer/userReducer.ts";
+import OrderDetails from "./screens/OrderDetails.tsx";
+import { UserReducerInitialState } from "./types/reducer-types.ts";
 const Checkout=lazy(()=>import("./screens/Checkout.tsx"));
 const Notfound=lazy(()=>import("./screens/Notfound.tsx"));
 const Login = lazy(() => import("./screens/Login.tsx"));
@@ -57,13 +56,13 @@ function App() {
   }, []);
 
   return loading ? (
-    <Loader></Loader>
+    <Loader1></Loader1>
   ) : (
     <div>
       <Router>
         {/* Header */}
         <Header user={user} />
-        <Suspense fallback={<Loader />}>
+        <Suspense fallback={<Loader1/>}>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/search" element={<Search />} />
