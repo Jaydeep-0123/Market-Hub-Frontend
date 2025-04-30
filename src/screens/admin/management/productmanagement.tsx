@@ -143,7 +143,7 @@ const Productmanagement = () => {
            <>
            <section>
           <strong>ID - {_id}</strong>
-          <img src={`http://localhost:8000/${photo}`} alt="Product" />
+          <img src={`${import.meta.env.VITE_SERVER}/${photo}`} alt="Product" />
           <p>{name}</p>
           {stock > 0 ? (
             <span className="green">{stock} Available</span>
