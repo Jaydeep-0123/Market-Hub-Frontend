@@ -31,7 +31,7 @@ function Shipping() {
     e.preventDefault();
     try 
     {
-        const response=await axios.post(`http://localhost:8000/api/v1/payment/createPayment`,{
+        const response=await axios.post(`${import.meta.env.VITE_SERVER}/api/v1/payment/createPayment`,{
           amount:total,
         },{
           headers:{
