@@ -33,7 +33,8 @@ export type CartItem={
   productId:string;
   quantity:number;
   stock:number;
-  _id:string
+ 
+  
 }
 
 export type OrderItem={

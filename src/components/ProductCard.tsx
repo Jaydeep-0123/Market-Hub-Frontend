@@ -1,7 +1,5 @@
-import React from "react";
 import { FaPlus } from "react-icons/fa";
 import { CartItem } from "../types/types";
-// import camera from '../assets/images/camera2.webp'
 type ProductsProps = {
   productId: string;
   photo: string;

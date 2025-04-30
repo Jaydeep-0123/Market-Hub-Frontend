@@ -1,11 +1,11 @@
-import React, { useState } from 'react'
-import { FaSearch, FaShoppingBag, FaSignInAlt, FaSignOutAlt} from 'react-icons/fa'
-import { FaUser } from 'react-icons/fa6';
-import { Link } from 'react-router-dom'
-import { User } from '../types/types';
 import { signOut } from 'firebase/auth';
-import { auth } from '../firebase/firebase';
+import { useState } from 'react';
+import { FaSearch, FaShoppingBag, FaSignInAlt, FaSignOutAlt } from 'react-icons/fa';
+import { FaUser } from 'react-icons/fa6';
+import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { auth } from '../firebase/firebase';
+import { User } from '../types/types';
 
 
 interface PropsType {

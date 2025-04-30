@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { FaTrash } from "react-icons/fa";
-import AdminSidebar from "../../../components/admin/AdminSidebar";
 import { useSelector } from "react-redux";
-import { UserReducerInitialState } from "../../../types/reducer-types";
-import { useAllProductsQuery, useDeleteProductMutation, useProductsDetailsQuery, useUpdateProductMutation } from "../../../redux/api/productAPI";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
-import Loader from "../../../components/Loader";
 import { toast } from "react-toastify";
+import AdminSidebar from "../../../components/admin/AdminSidebar";
+import Loader from "../../../components/Loader";
+import { useDeleteProductMutation, useProductsDetailsQuery, useUpdateProductMutation } from "../../../redux/api/productAPI";
+import { UserReducerInitialState } from "../../../types/reducer-types";
 
 const img =
   "https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8c2hvZXN8ZW58MHx8MHx8&w=1000&q=804";

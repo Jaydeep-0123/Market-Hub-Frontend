@@ -5,6 +5,8 @@ import {
   BarElement,
   Title,
   Tooltip,
+  ChartData,
+  ChartOptions,
   Legend,
   ArcElement,
   PointElement,
